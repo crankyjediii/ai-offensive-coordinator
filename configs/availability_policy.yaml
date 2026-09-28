@@ -1,0 +1,15 @@
+# Availability policy v1. Used only for reconstructed historical tests.
+# None of these rows have archived first-publication evidence: the retrieved assets are the
+# current re-uploads (see data audit). Forward snapshots use known_at = max(published, ingested).
+policy_id: availability_v1
+game_duration_hours: 4          # kickoff + 4h is the estimated completion time for completed games
+sources:
+  pbp:
+    basis: reconstructed_conservative_delay
+    delay_after_game_end_hours: 24   # nflverse PBP refreshes after game days
+  ftn_charting:
+    basis: reconstructed_conservative_delay
+    delay_after_game_end_hours: 48   # FTN loader documents charting within 48 hours
+  participation:
+    basis: reconstructed_conservative_delay
+    available_month_day_after_season: "03-01"   # released after the postseason; no in-season updates

@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0.0",
+  "request_id": "ae87463b-e69a-448a-b8fb-0dd4c6d783bc",
+  "scenario_kind": "hypothetical",
+  "mode": "pbp_baseline",
+  "season": 2026,
+  "offense_team": "CHI",
+  "defense_team": "GB",
+  "game_id": null,
+  "cutoff_at": "2026-09-27T12:00:00Z",
+  "snapshot_id": "synthetic_snapshot_2026_09_27",
+  "model_bundle_id": "synthetic_bundle_broad_v1",
+  "situation": {
+    "quarter": 2,
+    "seconds_remaining_in_quarter": 582,
+    "down": 2,
+    "yards_to_go": 7,
+    "yardline_100": 38,
+    "score_differential": 0,
+    "goal_to_go": false
+  },
+  "candidate_ids": [
+    "designed_rush",
+    "dropback"
+  ],
+  "utility": {
+    "policy": "expected_epa"
+  }
+}

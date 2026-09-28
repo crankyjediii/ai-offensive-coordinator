@@ -1,0 +1,320 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "request_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "scenario_kind": {
+      "type": "string",
+      "enum": [
+        "hypothetical",
+        "historical_replay"
+      ]
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "pbp_baseline",
+        "charted_history",
+        "enriched_current"
+      ]
+    },
+    "season": {
+      "type": "integer",
+      "minimum": 1920,
+      "maximum": 2100
+    },
+    "offense_team": {
+      "type": "string",
+      "enum": [
+        "ARI",
+        "ATL",
+        "BAL",
+        "BUF",
+        "CAR",
+        "CHI",
+        "CIN",
+        "CLE",
+        "DAL",
+        "DEN",
+        "DET",
+        "GB",
+        "HOU",
+        "IND",
+        "JAX",
+        "KC",
+        "LA",
+        "LAC",
+        "LV",
+        "MIA",
+        "MIN",
+        "NE",
+        "NO",
+        "NYG",
+        "NYJ",
+        "PHI",
+        "PIT",
+        "SEA",
+        "SF",
+        "TB",
+        "TEN",
+        "WAS",
+        "LEAGUE_AVERAGE"
+      ]
+    },
+    "defense_team": {
+      "type": "string",
+      "enum": [
+        "ARI",
+        "ATL",
+        "BAL",
+        "BUF",
+        "CAR",
+        "CHI",
+        "CIN",
+        "CLE",
+        "DAL",
+        "DEN",
+        "DET",
+        "GB",
+        "HOU",
+        "IND",
+        "JAX",
+        "KC",
+        "LA",
+        "LAC",
+        "LV",
+        "MIA",
+        "MIN",
+        "NE",
+        "NO",
+        "NYG",
+        "NYJ",
+        "PHI",
+        "PIT",
+        "SEA",
+        "SF",
+        "TB",
+        "TEN",
+        "WAS"
+      ]
+    },
+    "game_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_.:-]+$",
+          "description": "String source-mapped game identifier; null for a hypothetical scenario without a selected game."
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "cutoff_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$",
+      "description": "UTC as-of data eligibility cutoff; not the scenario game clock."
+    },
+    "snapshot_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9_.:-]+$"
+    },
+    "model_bundle_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9_.:-]+$"
+    },
+    "situation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "quarter": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4
+        },
+        "seconds_remaining_in_quarter": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 900
+        },
+        "down": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4
+        },
+        "yards_to_go": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 99
+        },
+        "yardline_100": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 99,
+          "description": "Yards from the defense goal line; CHI possession at GB 38 equals 38."
+        },
+        "score_differential": {
+          "type": "integer",
+          "minimum": -100,
+          "maximum": 100,
+          "description": "Offense score minus defense score."
+        },
+        "goal_to_go": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "quarter",
+        "seconds_remaining_in_quarter",
+        "down",
+        "yards_to_go",
+        "yardline_100",
+        "score_differential",
+        "goal_to_go"
+      ]
+    },
+    "optional_inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "hash": {
+          "type": "string",
+          "enum": [
+            "left",
+            "middle",
+            "right"
+          ]
+        },
+        "offensive_personnel": {
+          "type": "string",
+          "pattern": "^[0-5][0-5]$",
+          "description": "RB/TE personnel notation; validate total <= 5 and capability support in application logic."
+        },
+        "formation": {
+          "type": "string",
+          "enum": [
+            "under_center",
+            "shotgun",
+            "pistol"
+          ]
+        },
+        "motion": {
+          "type": "boolean"
+        }
+      },
+      "required": [],
+      "minProperties": 1
+    },
+    "candidate_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 64,
+        "pattern": "^[A-Za-z0-9_.:-]+$"
+      },
+      "minItems": 1,
+      "maxItems": 40,
+      "uniqueItems": true
+    },
+    "utility": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "policy": {
+          "const": "expected_epa"
+        }
+      },
+      "required": [
+        "policy"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "request_id",
+    "scenario_kind",
+    "mode",
+    "season",
+    "offense_team",
+    "defense_team",
+    "game_id",
+    "cutoff_at",
+    "snapshot_id",
+    "model_bundle_id",
+    "situation",
+    "candidate_ids",
+    "utility"
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Proposed recommendation request v1",
+  "description": "Starter API contract, not a running service. Optional inputs require snapshot/bundle capability validation. Additional application invariants are documented in 07-engineering-and-stack.md.",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "mode": {
+            "const": "pbp_baseline"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "candidate_ids": {
+            "items": {
+              "type": "string",
+              "enum": [
+                "designed_rush",
+                "dropback"
+              ]
+            }
+          }
+        },
+        "not": {
+          "required": [
+            "optional_inputs"
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "scenario_kind": {
+            "const": "historical_replay"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "game_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9_.:-]+$"
+          }
+        },
+        "not": {
+          "properties": {
+            "offense_team": {
+              "const": "LEAGUE_AVERAGE"
+            }
+          }
+        }
+      }
+    }
+  ]
+}

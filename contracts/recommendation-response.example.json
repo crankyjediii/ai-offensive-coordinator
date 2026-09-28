@@ -1,0 +1,125 @@
+{
+  "schema_version": "1.0.0",
+  "request_id": "ae87463b-e69a-448a-b8fb-0dd4c6d783bc",
+  "is_synthetic_example": true,
+  "example_notice": "Every prediction, sample count, model ID, source ID, and validation reference in this response is fictional. This is an API fixture, not a trained model result or analysis of the Packers.",
+  "status": "limited",
+  "reason_codes": [
+    "BROAD_CANDIDATES_ONLY",
+    "COVERAGE_LABELS_UNAVAILABLE",
+    "INTERVAL_NOT_CALIBRATED"
+  ],
+  "mode": "pbp_baseline",
+  "cutoff_at": "2026-09-27T12:00:00Z",
+  "snapshot_id": "synthetic_snapshot_2026_09_27",
+  "model_bundle_id": "synthetic_bundle_broad_v1",
+  "outcome_cohort_id": "reg_scrimmage_penalty_free_v1",
+  "recommended_candidate_id": "dropback",
+  "candidates": [
+    {
+      "candidate_id": "dropback",
+      "label": "Dropback",
+      "rank": 1,
+      "utility_epa_units": 0.12,
+      "metrics": {
+        "expected_epa": 0.12,
+        "expected_yards": 6.0,
+        "success_probability": 0.51,
+        "explosive_probability": 0.12,
+        "sack_probability": 0.06,
+        "turnover_probability": 0.018,
+        "first_down_or_td_probability": 0.39,
+        "epa_prediction_interval": null,
+        "missing_reasons": {
+          "epa_prediction_interval": "INTERVAL_NOT_CALIBRATED"
+        }
+      },
+      "support": {
+        "observed_play_count": 220,
+        "effective_sample_size": 145.2,
+        "scope": "Fictional matched historical candidate cohort; counts do not describe actual GB or CHI data."
+      },
+      "ensemble_epa_standard_deviation": 0.035,
+      "reason_codes": [
+        "BROAD_CANDIDATES_ONLY",
+        "INTERVAL_NOT_CALIBRATED"
+      ]
+    },
+    {
+      "candidate_id": "designed_rush",
+      "label": "Designed rush",
+      "rank": 2,
+      "utility_epa_units": 0.02,
+      "metrics": {
+        "expected_epa": 0.02,
+        "expected_yards": 4.3,
+        "success_probability": 0.43,
+        "explosive_probability": 0.09,
+        "sack_probability": 0.0,
+        "turnover_probability": 0.007,
+        "first_down_or_td_probability": 0.24,
+        "epa_prediction_interval": null,
+        "missing_reasons": {
+          "epa_prediction_interval": "INTERVAL_NOT_CALIBRATED"
+        }
+      },
+      "support": {
+        "observed_play_count": 160,
+        "effective_sample_size": 103.1,
+        "scope": "Fictional matched historical candidate cohort; counts do not describe actual GB or CHI data."
+      },
+      "ensemble_epa_standard_deviation": 0.028,
+      "reason_codes": [
+        "BROAD_CANDIDATES_ONLY",
+        "INTERVAL_NOT_CALIBRATED"
+      ]
+    }
+  ],
+  "defense_expectation": {
+    "status": "unavailable",
+    "coverage_probabilities": null,
+    "blitz_probability": null,
+    "expected_box_count": null,
+    "reason_codes": [
+      "COVERAGE_LABELS_UNAVAILABLE",
+      "MISSING_REQUIRED_CAPABILITY"
+    ]
+  },
+  "data_evidence": {
+    "eligible_defense_play_count": 180,
+    "effective_sample_size": 139.4,
+    "latest_eligible_event_at": "2026-09-21T23:00:00Z",
+    "last_ingested_at": "2026-09-27T11:00:00Z",
+    "availability_basis": "synthetic_example",
+    "source_ids": [
+      "synthetic_pbp"
+    ],
+    "unavailable_inputs": [
+      "hash",
+      "offensive_personnel",
+      "formation",
+      "motion",
+      "coverage",
+      "box_count",
+      "blitz"
+    ],
+    "reason_codes": [
+      "BROAD_CANDIDATES_ONLY",
+      "COVERAGE_LABELS_UNAVAILABLE"
+    ]
+  },
+  "model_evidence": {
+    "evaluation_report_id": "synthetic_evaluation_v1",
+    "calibration_artifact_id": "synthetic_probability_calibration_v1",
+    "ranking_policy_id": "synthetic_broad_policy_v1",
+    "ensemble_members": 3,
+    "ranking_passed_policy": true,
+    "reason_codes": [
+      "INTERVAL_NOT_CALIBRATED"
+    ]
+  },
+  "explanation": {
+    "engine": "template",
+    "text": "Synthetic illustration: dropback ranks above designed rush by expected EPA on eligible penalty-free plays in this fixture. Penalty occurrence is unknown before a call, so this restricted comparison is not full-call policy value. Coverage, personnel, hash, and named concepts are unavailable in the selected broad mode. No EPA prediction interval is supplied because interval calibration is not represented. These values are fictional."
+  }
+}

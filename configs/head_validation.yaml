@@ -1,0 +1,10 @@
+# Per-bundle validation status of Model A heads, decided from the locked-test evidence in each
+# bundle's evaluation report. A head marked failed is never displayed as a prediction.
+bundle_broad_v1_d3787de38384:
+  evaluation_report_id: exp_20260927T201315
+  heads:
+    box_count: passed        # prior mixture 1.140 log loss vs 1.156 league-only (2025)
+    blitz: passed            # 0.591 vs 0.597; calibration 28.0% predicted vs 29.5% observed
+    coverage: failed         # top-1 accuracy 24.1% below majority-class rate 27.8%
+    man_zone: failed         # 45.6% predicted vs 30.8% observed man coverage (2025 mix shift)
+    pressure: passed         # 30.2% predicted vs 29.8% observed

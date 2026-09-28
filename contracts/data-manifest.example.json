@@ -1,0 +1,18 @@
+{
+  "manifest_schema_version": "1.0.0",
+  "artifact_kind": "starter_contract",
+  "audit_status": "not_run",
+  "snapshot_id": null,
+  "cutoff_at": null,
+  "requested_seasons": [2022, 2023, 2024, 2025, 2026],
+  "actual_seasons": [],
+  "temporal_evidence_mode": "unassessed",
+  "taxonomy_version": "1.0.0-proposed",
+  "feature_schema_version": "1.0.0-proposed",
+  "code_commit": null,
+  "assets": [],
+  "quality_report_path": null,
+  "capabilities": [],
+  "promotion_allowed": false,
+  "notes": "Specification example only. Empty audit results prohibit training or claiming source coverage."
+}

@@ -1,0 +1,37 @@
+# Capability policy v1. A head/input is usable for a season only when its measured label
+# completeness on eligible plays meets these proportions. Values are project choices reviewed
+# against the Phase 1 audit, not universal thresholds.
+policy_id: capability_v1
+min_completeness:
+  box_count: 0.80
+  pass_rusher_count: 0.80
+  blitzer_count: 0.80
+  coverage: 0.60
+  man_zone: 0.60
+  pressure_observed: 0.60
+heads:
+  box_count: {source: ftn_charting, field: box_count, timely: true}
+  five_plus_rushers: {source: ftn_charting, field: pass_rusher_count, timely: true}
+  blitz: {source: ftn_charting, field: blitzer_count, timely: true}
+  coverage: {source: participation, field: coverage, timely: false}
+  man_zone: {source: participation, field: man_zone, timely: false}
+  pressure: {source: participation, field: pressure_observed, timely: false}
+modes:
+  pbp_baseline:
+    candidates: [designed_rush, dropback]
+    optional_inputs: []
+    defense_heads: [box_count, five_plus_rushers, blitz]
+  charted_history:
+    candidates: [designed_rush, dropback]
+    optional_inputs: []
+    defense_heads: [box_count, five_plus_rushers, blitz, coverage, man_zone, pressure]
+  enriched_current:
+    # No approved, lawful, timely current-season coverage source exists in this build.
+    candidates: []
+    optional_inputs: []
+    defense_heads: []
+    unavailable_reason: MISSING_REQUIRED_CAPABILITY
+support:
+  min_comparable_snaps: 100
+  min_distinct_games: 5
+  stale_source_days: 10

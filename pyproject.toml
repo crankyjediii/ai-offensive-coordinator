@@ -1,0 +1,59 @@
+[project]
+name = "coordinator"
+version = "0.1.0"
+description = "NFL defensive tendency modeling and broad play-family comparison (Python/PyTorch)"
+authors = [
+    { name = "Jimmy", email = "jimmymullen2009@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "duckdb>=1.5.5",
+    "fastapi>=0.141.1",
+    "jsonschema>=4.26.0",
+    "nflreadpy>=0.1.5",
+    "numpy>=2.5.3",
+    "polars>=1.44.2",
+    "pyarrow>=25.0.1",
+    "pydantic>=2",
+    "pyyaml>=6.0.3",
+    "rfc3339-validator>=0.1.4",
+    "scikit-learn>=1.9.1",
+    "scipy>=1.18.1",
+    "torch>=2.14.0",
+    "typer>=0.27.2",
+    "uvicorn>=0.54.0",
+]
+
+[build-system]
+requires = ["uv_build>=0.12.19,<0.13.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "mypy>=2.3.1",
+    "pre-commit>=4.6.2",
+    "pytest>=9.1.1",
+    "ruff>=0.16.9",
+]
+
+[project.scripts]
+coordinator = "coordinator.cli:app"
+
+[tool.ruff]
+line-length = 140
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["B008", "B023", "E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = ["ignore::DeprecationWarning", "ignore::UserWarning"]
+markers = ["data: requires the local warehouse and a snapshot", "slow: trains models"]
+
+[tool.mypy]
+python_version = "3.13"
+ignore_missing_imports = true
+check_untyped_defs = false

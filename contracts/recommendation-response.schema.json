@@ -1,0 +1,1247 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "request_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "is_synthetic_example": {
+      "type": "boolean"
+    },
+    "example_notice": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "ok",
+        "limited",
+        "abstained",
+        "unavailable"
+      ]
+    },
+    "reason_codes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "BROAD_CANDIDATES_ONLY",
+          "COVERAGE_LABELS_UNAVAILABLE",
+          "INTERVAL_NOT_CALIBRATED",
+          "METRIC_NOT_ESTIMATED",
+          "LOW_SUPPORT",
+          "LOW_OVERLAP",
+          "OUT_OF_DISTRIBUTION",
+          "UNSTABLE_RANKING",
+          "MISSING_REQUIRED_CAPABILITY",
+          "MODEL_UNAVAILABLE",
+          "SNAPSHOT_UNAVAILABLE",
+          "STALE_SOURCE",
+          "UNKNOWN_PUBLICATION_TIME",
+          "PRIOR_DOMINATED",
+          "NO_ELIGIBLE_CANDIDATE"
+        ]
+      },
+      "uniqueItems": true,
+      "minItems": 0
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "pbp_baseline",
+        "charted_history",
+        "enriched_current"
+      ]
+    },
+    "cutoff_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "snapshot_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9_.:-]+$"
+    },
+    "model_bundle_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9_.:-]+$"
+    },
+    "outcome_cohort_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9_.:-]+$",
+      "description": "Versioned outcome eligibility policy bound to the model bundle. Primary cohort: reg_scrimmage_penalty_free_v1."
+    },
+    "recommended_candidate_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_.:-]+$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "candidate_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9_.:-]+$"
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "rank": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 40
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "utility_epa_units": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "metrics": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "expected_epa": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Expected EPA conditional on the bundle outcome cohort. Primary v1 cohort is eligible penalty-free regulation scrimmage plays; this is not full-call policy value."
+              },
+              "expected_yards": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "success_probability": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "P(EPA > 0) within candidate and outcome cohort; not conditioned on completion or absence of a sack."
+              },
+              "explosive_probability": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "P(official yards gained >= 10 for designed_rush or >= 20 for dropback) within candidate and outcome cohort."
+              },
+              "sack_probability": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Unconditional P(sack); zero by definition for a verified designed_rush, null when unestimated."
+              },
+              "turnover_probability": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "P(interception or lost fumble on play); excludes turnover on downs."
+              },
+              "first_down_or_td_probability": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "epa_prediction_interval": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "quantity": {
+                        "const": "single_play_epa"
+                      },
+                      "lower": {
+                        "type": "number"
+                      },
+                      "upper": {
+                        "type": "number"
+                      },
+                      "nominal_coverage": {
+                        "type": "number",
+                        "exclusiveMinimum": 0,
+                        "exclusiveMaximum": 1
+                      },
+                      "method": {
+                        "type": "string",
+                        "enum": [
+                          "split_conformal_residual",
+                          "conformalized_quantile_regression"
+                        ]
+                      },
+                      "calibration_artifact_id": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 128,
+                        "pattern": "^[A-Za-z0-9_.:-]+$"
+                      }
+                    },
+                    "required": [
+                      "quantity",
+                      "lower",
+                      "upper",
+                      "nominal_coverage",
+                      "method",
+                      "calibration_artifact_id"
+                    ],
+                    "description": "Empirically calibrated interval for the EPA outcome of a future play under the evaluated data conditions. Not a causal interval or a confidence interval for mean EPA. Application must check lower <= upper."
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "missing_reasons": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "expected_epa": {
+                    "type": "string",
+                    "enum": [
+                      "BROAD_CANDIDATES_ONLY",
+                      "COVERAGE_LABELS_UNAVAILABLE",
+                      "INTERVAL_NOT_CALIBRATED",
+                      "METRIC_NOT_ESTIMATED",
+                      "LOW_SUPPORT",
+                      "LOW_OVERLAP",
+                      "OUT_OF_DISTRIBUTION",
+                      "UNSTABLE_RANKING",
+                      "MISSING_REQUIRED_CAPABILITY",
+                      "MODEL_UNAVAILABLE",
+                      "SNAPSHOT_UNAVAILABLE",
+                      "STALE_SOURCE",
+                      "UNKNOWN_PUBLICATION_TIME",
+                      "PRIOR_DOMINATED",
+                      "NO_ELIGIBLE_CANDIDATE"
+                    ]
+                  },
+                  "expected_yards": {
+                    "type": "string",
+                    "enum": [
+                      "BROAD_CANDIDATES_ONLY",
+                      "COVERAGE_LABELS_UNAVAILABLE",
+                      "INTERVAL_NOT_CALIBRATED",
+                      "METRIC_NOT_ESTIMATED",
+                      "LOW_SUPPORT",
+                      "LOW_OVERLAP",
+                      "OUT_OF_DISTRIBUTION",
+                      "UNSTABLE_RANKING",
+                      "MISSING_REQUIRED_CAPABILITY",
+                      "MODEL_UNAVAILABLE",
+                      "SNAPSHOT_UNAVAILABLE",
+                      "STALE_SOURCE",
+                      "UNKNOWN_PUBLICATION_TIME",
+                      "PRIOR_DOMINATED",
+                      "NO_ELIGIBLE_CANDIDATE"
+                    ]
+                  },
+                  "success_probability": {
+                    "type": "string",
+                    "enum": [
+                      "BROAD_CANDIDATES_ONLY",
+                      "COVERAGE_LABELS_UNAVAILABLE",
+                      "INTERVAL_NOT_CALIBRATED",
+                      "METRIC_NOT_ESTIMATED",
+                      "LOW_SUPPORT",
+                      "LOW_OVERLAP",
+                      "OUT_OF_DISTRIBUTION",
+                      "UNSTABLE_RANKING",
+                      "MISSING_REQUIRED_CAPABILITY",
+                      "MODEL_UNAVAILABLE",
+                      "SNAPSHOT_UNAVAILABLE",
+                      "STALE_SOURCE",
+                      "UNKNOWN_PUBLICATION_TIME",
+                      "PRIOR_DOMINATED",
+                      "NO_ELIGIBLE_CANDIDATE"
+                    ]
+                  },
+                  "explosive_probability": {
+                    "type": "string",
+                    "enum": [
+                      "BROAD_CANDIDATES_ONLY",
+                      "COVERAGE_LABELS_UNAVAILABLE",
+                      "INTERVAL_NOT_CALIBRATED",
+                      "METRIC_NOT_ESTIMATED",
+                      "LOW_SUPPORT",
+                      "LOW_OVERLAP",
+                      "OUT_OF_DISTRIBUTION",
+                      "UNSTABLE_RANKING",
+                      "MISSING_REQUIRED_CAPABILITY",
+                      "MODEL_UNAVAILABLE",
+                      "SNAPSHOT_UNAVAILABLE",
+                      "STALE_SOURCE",
+                      "UNKNOWN_PUBLICATION_TIME",
+                      "PRIOR_DOMINATED",
+                      "NO_ELIGIBLE_CANDIDATE"
+                    ]
+                  },
+                  "sack_probability": {
+                    "type": "string",
+                    "enum": [
+                      "BROAD_CANDIDATES_ONLY",
+                      "COVERAGE_LABELS_UNAVAILABLE",
+                      "INTERVAL_NOT_CALIBRATED",
+                      "METRIC_NOT_ESTIMATED",
+                      "LOW_SUPPORT",
+                      "LOW_OVERLAP",
+                      "OUT_OF_DISTRIBUTION",
+                      "UNSTABLE_RANKING",
+                      "MISSING_REQUIRED_CAPABILITY",
+                      "MODEL_UNAVAILABLE",
+                      "SNAPSHOT_UNAVAILABLE",
+                      "STALE_SOURCE",
+                      "UNKNOWN_PUBLICATION_TIME",
+                      "PRIOR_DOMINATED",
+                      "NO_ELIGIBLE_CANDIDATE"
+                    ]
+                  },
+                  "turnover_probability": {
+                    "type": "string",
+                    "enum": [
+                      "BROAD_CANDIDATES_ONLY",
+                      "COVERAGE_LABELS_UNAVAILABLE",
+                      "INTERVAL_NOT_CALIBRATED",
+                      "METRIC_NOT_ESTIMATED",
+                      "LOW_SUPPORT",
+                      "LOW_OVERLAP",
+                      "OUT_OF_DISTRIBUTION",
+                      "UNSTABLE_RANKING",
+                      "MISSING_REQUIRED_CAPABILITY",
+                      "MODEL_UNAVAILABLE",
+                      "SNAPSHOT_UNAVAILABLE",
+                      "STALE_SOURCE",
+                      "UNKNOWN_PUBLICATION_TIME",
+                      "PRIOR_DOMINATED",
+                      "NO_ELIGIBLE_CANDIDATE"
+                    ]
+                  },
+                  "first_down_or_td_probability": {
+                    "type": "string",
+                    "enum": [
+                      "BROAD_CANDIDATES_ONLY",
+                      "COVERAGE_LABELS_UNAVAILABLE",
+                      "INTERVAL_NOT_CALIBRATED",
+                      "METRIC_NOT_ESTIMATED",
+                      "LOW_SUPPORT",
+                      "LOW_OVERLAP",
+                      "OUT_OF_DISTRIBUTION",
+                      "UNSTABLE_RANKING",
+                      "MISSING_REQUIRED_CAPABILITY",
+                      "MODEL_UNAVAILABLE",
+                      "SNAPSHOT_UNAVAILABLE",
+                      "STALE_SOURCE",
+                      "UNKNOWN_PUBLICATION_TIME",
+                      "PRIOR_DOMINATED",
+                      "NO_ELIGIBLE_CANDIDATE"
+                    ]
+                  },
+                  "epa_prediction_interval": {
+                    "type": "string",
+                    "enum": [
+                      "BROAD_CANDIDATES_ONLY",
+                      "COVERAGE_LABELS_UNAVAILABLE",
+                      "INTERVAL_NOT_CALIBRATED",
+                      "METRIC_NOT_ESTIMATED",
+                      "LOW_SUPPORT",
+                      "LOW_OVERLAP",
+                      "OUT_OF_DISTRIBUTION",
+                      "UNSTABLE_RANKING",
+                      "MISSING_REQUIRED_CAPABILITY",
+                      "MODEL_UNAVAILABLE",
+                      "SNAPSHOT_UNAVAILABLE",
+                      "STALE_SOURCE",
+                      "UNKNOWN_PUBLICATION_TIME",
+                      "PRIOR_DOMINATED",
+                      "NO_ELIGIBLE_CANDIDATE"
+                    ]
+                  }
+                },
+                "required": []
+              }
+            },
+            "required": [
+              "expected_epa",
+              "expected_yards",
+              "success_probability",
+              "explosive_probability",
+              "sack_probability",
+              "turnover_probability",
+              "first_down_or_td_probability",
+              "epa_prediction_interval",
+              "missing_reasons"
+            ],
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "expected_epa": {
+                      "type": "null"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "missing_reasons": {
+                      "required": [
+                        "expected_epa"
+                      ]
+                    }
+                  }
+                },
+                "else": {
+                  "properties": {
+                    "missing_reasons": {
+                      "not": {
+                        "required": [
+                          "expected_epa"
+                        ]
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "expected_yards": {
+                      "type": "null"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "missing_reasons": {
+                      "required": [
+                        "expected_yards"
+                      ]
+                    }
+                  }
+                },
+                "else": {
+                  "properties": {
+                    "missing_reasons": {
+                      "not": {
+                        "required": [
+                          "expected_yards"
+                        ]
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "success_probability": {
+                      "type": "null"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "missing_reasons": {
+                      "required": [
+                        "success_probability"
+                      ]
+                    }
+                  }
+                },
+                "else": {
+                  "properties": {
+                    "missing_reasons": {
+                      "not": {
+                        "required": [
+                          "success_probability"
+                        ]
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "explosive_probability": {
+                      "type": "null"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "missing_reasons": {
+                      "required": [
+                        "explosive_probability"
+                      ]
+                    }
+                  }
+                },
+                "else": {
+                  "properties": {
+                    "missing_reasons": {
+                      "not": {
+                        "required": [
+                          "explosive_probability"
+                        ]
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "sack_probability": {
+                      "type": "null"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "missing_reasons": {
+                      "required": [
+                        "sack_probability"
+                      ]
+                    }
+                  }
+                },
+                "else": {
+                  "properties": {
+                    "missing_reasons": {
+                      "not": {
+                        "required": [
+                          "sack_probability"
+                        ]
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "turnover_probability": {
+                      "type": "null"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "missing_reasons": {
+                      "required": [
+                        "turnover_probability"
+                      ]
+                    }
+                  }
+                },
+                "else": {
+                  "properties": {
+                    "missing_reasons": {
+                      "not": {
+                        "required": [
+                          "turnover_probability"
+                        ]
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "first_down_or_td_probability": {
+                      "type": "null"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "missing_reasons": {
+                      "required": [
+                        "first_down_or_td_probability"
+                      ]
+                    }
+                  }
+                },
+                "else": {
+                  "properties": {
+                    "missing_reasons": {
+                      "not": {
+                        "required": [
+                          "first_down_or_td_probability"
+                        ]
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "epa_prediction_interval": {
+                      "type": "null"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "missing_reasons": {
+                      "required": [
+                        "epa_prediction_interval"
+                      ]
+                    }
+                  }
+                },
+                "else": {
+                  "properties": {
+                    "missing_reasons": {
+                      "not": {
+                        "required": [
+                          "epa_prediction_interval"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "support": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "observed_play_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "effective_sample_size": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "scope": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              }
+            },
+            "required": [
+              "observed_play_count",
+              "effective_sample_size",
+              "scope"
+            ]
+          },
+          "ensemble_epa_standard_deviation": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reason_codes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "BROAD_CANDIDATES_ONLY",
+                "COVERAGE_LABELS_UNAVAILABLE",
+                "INTERVAL_NOT_CALIBRATED",
+                "METRIC_NOT_ESTIMATED",
+                "LOW_SUPPORT",
+                "LOW_OVERLAP",
+                "OUT_OF_DISTRIBUTION",
+                "UNSTABLE_RANKING",
+                "MISSING_REQUIRED_CAPABILITY",
+                "MODEL_UNAVAILABLE",
+                "SNAPSHOT_UNAVAILABLE",
+                "STALE_SOURCE",
+                "UNKNOWN_PUBLICATION_TIME",
+                "PRIOR_DOMINATED",
+                "NO_ELIGIBLE_CANDIDATE"
+              ]
+            },
+            "uniqueItems": true,
+            "minItems": 0
+          }
+        },
+        "required": [
+          "candidate_id",
+          "label",
+          "rank",
+          "utility_epa_units",
+          "metrics",
+          "support",
+          "ensemble_epa_standard_deviation",
+          "reason_codes"
+        ]
+      },
+      "maxItems": 40
+    },
+    "defense_expectation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "predicted",
+            "unavailable"
+          ]
+        },
+        "coverage_probabilities": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "minProperties": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "blitz_probability": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "expected_box_count": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 11
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "BROAD_CANDIDATES_ONLY",
+              "COVERAGE_LABELS_UNAVAILABLE",
+              "INTERVAL_NOT_CALIBRATED",
+              "METRIC_NOT_ESTIMATED",
+              "LOW_SUPPORT",
+              "LOW_OVERLAP",
+              "OUT_OF_DISTRIBUTION",
+              "UNSTABLE_RANKING",
+              "MISSING_REQUIRED_CAPABILITY",
+              "MODEL_UNAVAILABLE",
+              "SNAPSHOT_UNAVAILABLE",
+              "STALE_SOURCE",
+              "UNKNOWN_PUBLICATION_TIME",
+              "PRIOR_DOMINATED",
+              "NO_ELIGIBLE_CANDIDATE"
+            ]
+          },
+          "uniqueItems": true,
+          "minItems": 0
+        }
+      },
+      "required": [
+        "status",
+        "coverage_probabilities",
+        "blitz_probability",
+        "expected_box_count",
+        "reason_codes"
+      ],
+      "description": "Predictions for the hypothetical snap, never observed realized labels. A non-null coverage distribution must match bundle taxonomy and sum to one within numerical tolerance."
+    },
+    "data_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "eligible_defense_play_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "effective_sample_size": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "latest_eligible_event_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "last_ingested_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "availability_basis": {
+          "type": "string",
+          "enum": [
+            "archived_as_of",
+            "reconstructed_conservative_delay",
+            "synthetic_example"
+          ]
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9_.:-]+$"
+          },
+          "uniqueItems": true
+        },
+        "unavailable_inputs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "hash",
+              "offensive_personnel",
+              "formation",
+              "motion",
+              "coverage",
+              "box_count",
+              "blitz"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "reason_codes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "BROAD_CANDIDATES_ONLY",
+              "COVERAGE_LABELS_UNAVAILABLE",
+              "INTERVAL_NOT_CALIBRATED",
+              "METRIC_NOT_ESTIMATED",
+              "LOW_SUPPORT",
+              "LOW_OVERLAP",
+              "OUT_OF_DISTRIBUTION",
+              "UNSTABLE_RANKING",
+              "MISSING_REQUIRED_CAPABILITY",
+              "MODEL_UNAVAILABLE",
+              "SNAPSHOT_UNAVAILABLE",
+              "STALE_SOURCE",
+              "UNKNOWN_PUBLICATION_TIME",
+              "PRIOR_DOMINATED",
+              "NO_ELIGIBLE_CANDIDATE"
+            ]
+          },
+          "uniqueItems": true,
+          "minItems": 0
+        }
+      },
+      "required": [
+        "eligible_defense_play_count",
+        "effective_sample_size",
+        "latest_eligible_event_at",
+        "last_ingested_at",
+        "availability_basis",
+        "source_ids",
+        "unavailable_inputs",
+        "reason_codes"
+      ]
+    },
+    "model_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "evaluation_report_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_.:-]+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "calibration_artifact_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9_.:-]+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "ranking_policy_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_.:-]+$"
+        },
+        "ensemble_members": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20
+        },
+        "ranking_passed_policy": {
+          "type": "boolean"
+        },
+        "reason_codes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "BROAD_CANDIDATES_ONLY",
+              "COVERAGE_LABELS_UNAVAILABLE",
+              "INTERVAL_NOT_CALIBRATED",
+              "METRIC_NOT_ESTIMATED",
+              "LOW_SUPPORT",
+              "LOW_OVERLAP",
+              "OUT_OF_DISTRIBUTION",
+              "UNSTABLE_RANKING",
+              "MISSING_REQUIRED_CAPABILITY",
+              "MODEL_UNAVAILABLE",
+              "SNAPSHOT_UNAVAILABLE",
+              "STALE_SOURCE",
+              "UNKNOWN_PUBLICATION_TIME",
+              "PRIOR_DOMINATED",
+              "NO_ELIGIBLE_CANDIDATE"
+            ]
+          },
+          "uniqueItems": true,
+          "minItems": 0
+        }
+      },
+      "required": [
+        "evaluation_report_id",
+        "calibration_artifact_id",
+        "ranking_policy_id",
+        "ensemble_members",
+        "ranking_passed_policy",
+        "reason_codes"
+      ]
+    },
+    "explanation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "engine": {
+          "type": "string",
+          "enum": [
+            "template",
+            "facts_only_language_model"
+          ]
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 3000
+        }
+      },
+      "required": [
+        "engine",
+        "text"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "request_id",
+    "is_synthetic_example",
+    "example_notice",
+    "status",
+    "reason_codes",
+    "mode",
+    "cutoff_at",
+    "snapshot_id",
+    "model_bundle_id",
+    "outcome_cohort_id",
+    "recommended_candidate_id",
+    "candidates",
+    "defense_expectation",
+    "data_evidence",
+    "model_evidence",
+    "explanation"
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Proposed recommendation response v1",
+  "description": "Starter contract. Domain status is independent of HTTP transport errors. Null is unavailable, never equivalent to zero. Application checks include unique candidate IDs, consistent rank ordering, recommendation membership, snapshot/bundle compatibility, interval order, and probability normalization.",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "is_synthetic_example": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "example_notice": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "example_notice": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "enum": [
+              "abstained",
+              "unavailable"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "recommended_candidate_id": {
+            "type": "null"
+          },
+          "reason_codes": {
+            "minItems": 1
+          },
+          "model_evidence": {
+            "properties": {
+              "ranking_passed_policy": {
+                "const": false
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "unavailable"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "candidates": {
+            "maxItems": 0
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "enum": [
+              "ok",
+              "limited"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "recommended_candidate_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9_.:-]+$"
+          },
+          "candidates": {
+            "minItems": 1
+          },
+          "model_evidence": {
+            "properties": {
+              "ranking_passed_policy": {
+                "const": true
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "limited"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "reason_codes": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "defense_expectation": {
+            "properties": {
+              "status": {
+                "const": "unavailable"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "defense_expectation": {
+            "properties": {
+              "coverage_probabilities": {
+                "type": "null"
+              },
+              "blitz_probability": {
+                "type": "null"
+              },
+              "expected_box_count": {
+                "type": "null"
+              },
+              "reason_codes": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
